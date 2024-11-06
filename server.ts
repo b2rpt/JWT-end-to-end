@@ -12,5 +12,10 @@ app.get('/test', (req:Request,res:Response)=>{
     res.send('this test page')
 });
 
-app.use('/api', router)
+app.use('/api', router);
+
+app.get('*', (req:Request,res:Response)=>{
+    res.send('invalid page request')
+});
+
 app.listen(PORT,()=>console.log(`server started on port ${PORT}`))

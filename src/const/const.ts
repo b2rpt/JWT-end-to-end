@@ -1,6 +1,19 @@
-const { PORT, SALT_ROUND = '0', SECRET_TOKEN } = process.env;
-
+const {
+  PORT,
+  SALT_ROUND = '0',
+  ACCESS_TOKEN,
+  ACCESS_TOKEN_EXPIRY,
+  REFRESH_TOKEN,
+  REFRESH_TOKEN_EXPIRY
+} = process.env;
 
 const parsedSaltRound = parseInt(SALT_ROUND, 10);
 
-export { PORT, parsedSaltRound as SALT_ROUND, SECRET_TOKEN };
+export {
+  PORT,
+  parsedSaltRound as SALT_ROUND,
+  ACCESS_TOKEN,
+  ACCESS_TOKEN_EXPIRY,
+  REFRESH_TOKEN,
+  REFRESH_TOKEN_EXPIRY
+};

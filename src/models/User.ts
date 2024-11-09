@@ -15,6 +15,7 @@ export interface IUser extends Document {
   priority: number;
   createdAt: Date;
   updatedAt: Date;
+  refreshToken: string;
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
@@ -63,8 +64,11 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
   updatedAt: {
     type: Date,
   },
+  refreshToken: {
+    type: String,
+  },
 });
 
-const UserModel: Model<IUser> = mongoose.model<IUser>('User', userSchema);
+const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
 
-export default UserModel;
+export default User;

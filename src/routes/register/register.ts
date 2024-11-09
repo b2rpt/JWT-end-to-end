@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import UserModel from '../../models/userModel.ts';
+import User from '../../models/User.ts';
 import { getHashedPassword } from '../../lib/hashed-password/hashed-password.ts';
 
 const register = async (req: Request<any>, res: Response<any | string>) => {
@@ -7,8 +7,8 @@ const register = async (req: Request<any>, res: Response<any | string>) => {
     //schema validation
     const { displayName, email, password, mobile } = req.body;
 
-    const existingEmailUser = await UserModel.findOne({ email });
-    const existingMobileUser = await UserModel.findOne({ mobile });
+    const existingEmailUser = await User.findOne({ email });
+    const existingMobileUser = await User.findOne({ mobile });
 
     if (existingEmailUser) {
       return res.status(400).send('Email already exist');
@@ -17,7 +17,7 @@ const register = async (req: Request<any>, res: Response<any | string>) => {
       return res.status(400).send('Mobile already exist');
     }
 
-    const newUser = new UserModel({
+    const newUser = new User({
       displayName,
       email,
       password: await getHashedPassword(password),

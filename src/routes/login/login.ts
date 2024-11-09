@@ -1,12 +1,17 @@
 import type { Request, Response } from 'express';
-import UserModel from '../../models/userModel.ts';
-import jwt from 'jsonwebtoken';
+import User from '../../models/User.ts';
 import { verifyPassword } from '../../lib/hashed-password/hashed-password.ts';
-import { SECRET_TOKEN } from '../../const/const.ts';
+import {
+  ACCESS_TOKEN,
+  ACCESS_TOKEN_EXPIRY,
+  REFRESH_TOKEN,
+  REFRESH_TOKEN_EXPIRY,
+} from '../../const/const.ts';
+import { getToken } from '../../lib/hashed-password/tokens/tokens.ts';
 
 const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  const existingEmailUser = await UserModel.findOne({ email });
+  const existingEmailUser = await User.findOne({ email });
 
   if (!existingEmailUser) {
     return res.status(400).send('email or password is not correct');
@@ -23,8 +28,18 @@ const login = async (req: Request, res: Response) => {
     userId: _id,
   };
 
-  const token = jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1h' });
-  return res.status(200).json({ msg: `user ${_id} logged in successfully`, token });
+  const accessToken = getToken(payload, ACCESS_TOKEN, ACCESS_TOKEN_EXPIRY);
+  const refreshToken = getToken(payload, REFRESH_TOKEN, REFRESH_TOKEN_EXPIRY);
+  const option = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  await User.findByIdAndUpdate(_id, { $set: { refreshToken } });
+  return res
+    .status(200)
+    .cookie('refreshToken', refreshToken, option)
+    .json({ msg: `user ${_id} logged in successfully`, accessToken });
 };
 
 export default login;

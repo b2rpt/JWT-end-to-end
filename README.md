@@ -1,2 +1,2 @@
 # JWT-end-to-end
-hashed password | JWR token creation and validation | session validation 
+hashed password | JWR token creation and validation | session validation | refresh token
